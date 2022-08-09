@@ -1,11 +1,10 @@
 from datetime import datetime
-from flaskblog import db, login_manager
+from flaskblog import db, login_manager  # Setup as instantiated objects in __init__.py 
 from flask_login import UserMixin 
 
-@login_manager.user_loader  # Per docs to setup login manager 
+@login_manager.user_loader  # Per docs to setup login manager using a decorator on top of the load_user func 
 def load_user(user_id):
     return User.query.get(int(user_id))
-
 
 
 # Create db models that reflect structure of db 
@@ -13,12 +12,13 @@ class User(db.Model, UserMixin):  # Inherit from db.Model. UserMixin is required
     id = db.Column(db.Integer, primary_key=True) # User id 
     username = db.Column(db.String(20), unique=True, nullable=False) # Username, 20 char length max, must be unique, must have at least a username
     email = db.Column(db.String(120), unique=True, nullable=False) # Email
-    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')  # Profile pic
+    image_file = db.Column(db.String(20), nullable=False, default='default.jpeg')  # Profile pic
     password = db.Column(db.String(60), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True) # backref allows Post to get the user that created the post. Every post must have a User. But a User can have many Posts. 
 
     def __repr__(self):
-        """ How messages are printed """
+        """ How messages are printed to be machine-readable when __repr__ is called on an instance of a Class
+         e.g. print(repr(user)). https://www.pythontutorial.net/python-oop/python-__repr__/ """
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
 
 class Post(db.Model):  # Inherit from db.Model
@@ -42,4 +42,4 @@ class Post(db.Model):  # Inherit from db.Model
 # db.session.add(user_2)
 # db.session.commit()
 
-# Variables required for templates 
+# Need to include this code into routes.py and templates to allow manipulation from flaskblog 

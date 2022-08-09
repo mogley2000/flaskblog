@@ -8,5 +8,54 @@
             <p class="text-secondary">{{ current_user.email }}</p>
         </div>
         </div>
+        
+            <form method="POST" action="" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4"> Account Info </legend>
+                    <div class="form-group">
+                        {{ form.username.label(class="form-control-label") }}  <!-- form is an instance of registration form Class passed via route  -->
+                        {% if form.username.errors %}  <!-- error handler for incorrect form input -->
+                            {{ form.username(class="form-control form-control-lg is-invalid") }} <!-- notice "is-error" tag -->
+                            <div class="invalid-feedback">
+                                {% for error in form.username.errors %} <!-- list out errors in a loop -->
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.username(class="form-control form-control-lg") }} <!-- if no error, load standard form -->
+                        {% endif %}
+                    </div>
+    
+                    <!-- Same block of code repeated for email -->
+                    <div class="form-group">
+                        {{ form.email.label(class="form-control-label") }}
+                        {% if form.email.errors %}
+                            {{ form.email(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.email.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.email(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.picture.label() }}
+                        {{ form.picture(class="form-control-file") }}
+                        {% if form.picture.errors %}
+                            {% for error in form.picture.errors %}
+                                <span class="text-danger">{{ error }}</span></br>
+                            {% endfor %}
+                        {% endif %}
+
+                    </div>
+                </fieldset>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-outline-info") }}
+                </div>
+            </form>
+    </div>
 {% endblock content %}
 
