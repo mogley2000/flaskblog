@@ -112,7 +112,7 @@ def new_post():
 
 
 @app.route("/post/<int:post_id>")  # Set route based on a variable. In this case post_id var set to be an int
-def post(post_id):
+def post(post_id):  # Receives post_id from the variable received in the route above 
     post = Post.query.get_or_404(post_id)  # Get post with post_id otherwise return 404 
     return render_template('post.html', title=post.title, post=post)
 
@@ -120,7 +120,7 @@ def post(post_id):
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])  
 @login_required
 def update_post(post_id):
-    post = Post.query.get_or_404(post_id)  
+    post = Post.query.get_or_404(post_id) # Get the post related to post_id  
     if post.author != current_user:  # Check the logged in user owns the post 
         abort(403)
     form = PostForm()
@@ -137,8 +137,16 @@ def update_post(post_id):
     return render_template('create_post.html', title='Update Post', form=form, legend='Update Post')  # Same template new_post route but use legend as dynamic title 
 
 
-@app.route("/delete_post", methods=['GET', 'POST'])
+@app.route("/post/<int:post_id>/delete", methods=['POST'])
 @login_required
-def delete_post():
-    pass
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('home'))
+    
+    
 
