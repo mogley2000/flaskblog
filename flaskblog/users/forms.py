@@ -1,12 +1,10 @@
-""" Setup forms using flask-wtf. Allows you to manage and validate form inputs  """
-
-from xml.dom import ValidationErr
 from flask_wtf import FlaskForm  # Class that you pass to inherit from for new form class e.g. RegistrationForm 
 from flask_wtf.file import FileField, FileAllowed  # Change profile pic - validator that restricts what kind of files are uploaded
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from flask_login import current_user
 from flaskblog.models import User  # import User db model 
-from flask_login import current_user  # use current_user to amend UpdateAccountForm if username or email is different from their current for validation checks 
+
 
 class RegistrationForm(FlaskForm):  #FlaskForm as an argument to inherit from FlaskForm 
     username = StringField('Username', 
@@ -64,8 +62,22 @@ class UpdateAccountForm(FlaskForm):  #FlaskForm as an argument to inherit from F
             if user:  # If user is anything other than None
                 raise ValidationError('That email is already taken. Please choose another email')
 
-class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()])
-    submit = SubmitField('Post')
-    
+
+class RequestResetForm(FlaskForm):
+    email = StringField('Email', 
+                        validators=[DataRequired(), Email()])
+    submit = SubmitField('Request Password Reset')
+
+    def validate_email(self, email):
+        """ Check email isn't already in User db """
+        user = User.query.filter_by(email=email.data).first()  # Check username.data from form is already in User db
+        if user is None:  # If user is anything other than None
+            raise ValidationError('There is no account with that email. You must register first')
+
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Password', 
+                            validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', 
+                                    validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Reset Password')

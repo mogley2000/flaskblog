@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% block content %}
+    <h1 class="mb-3">Posts by {{ user.username }} ({{ posts.total }})</h1>
     {% for post in posts.items %}  <!-- 'home' route declares posts=posts in routes.py. Also must loop through posts.items as using pagination object vs 'for post in posts' which is not iterable --> 
         <article class="media content-section">
             <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">  <!-- Author is back ref in models.py -->
@@ -19,9 +20,9 @@
     {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
         {% if page_num %}
             {% if posts.page == page_num %} <!-- different formatting for current page-->
-                <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a> 
+                <a class="btn btn-info mb-4" href="{{ url_for('users.user_posts', username=user.username, page=page_num) }}">{{ page_num }}</a> 
             {% else %}
-                <a class="btn btn-outline-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a> <!--- sets page=page_num which goes into the url as .e.g '?page=2' and is picked up as sys.argv in routes -->
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('users.user_posts', username=user.username, page=page_num) }}">{{ page_num }}</a> <!--- sets page=page_num which goes into the url as .e.g '?page=2' and is picked up as sys.argv in routes -->
             {% endif %}
         {% else %} <!--- page num is None in iter_pages, inserts the '...' divider e.g. 1 2 3 4 5 ... 12 13 --->
             ...
