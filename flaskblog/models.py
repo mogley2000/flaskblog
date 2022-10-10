@@ -1,8 +1,9 @@
 from datetime import datetime
 from xml.dom import NoModificationAllowedErr
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer 
-from flaskblog import db, login_manager, app  # Setup as instantiated objects in __init__.py. App allows secret key to be imported for use in reset token 
+from flaskblog import db, login_manager  # Setup as instantiated objects in __init__.py. App allows secret key to be imported for use in reset token 
 from flask_login import UserMixin 
+from flask import current_app
 
 @login_manager.user_loader  # Per docs to setup login manager using a decorator on top of the load_user func 
 def load_user(user_id):
@@ -19,12 +20,12 @@ class User(db.Model, UserMixin):  # Inherit from db.Model. UserMixin is required
     posts = db.relationship('Post', backref='author', lazy=True) # backref allows Post to get the user that created the post. Every post must have a User. But a User can have many Posts. 
 
     def get_reset_token(self, expires_sec=1800):  # Method to get reset email token
-        s = Serializer(app.config['SECRET_KEY'], expires_sec)
+        s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
         return s.dumps({'user_id': self.id}).decode('utf-8')  # payload is current user_id as dict
     
     @staticmethod  # Decorator because self is not used as a argument 
     def verify_reset_token(token):
-        s = Serializer(app.config['SECRET_KEY'])
+        s = Serializer(current_app.config['SECRET_KEY'])
         try:
             user_id = s.loads(token)['user_id']
         except:

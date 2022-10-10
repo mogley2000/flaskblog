@@ -1,14 +1,15 @@
 import secrets, os 
 from PIL import Image  # Pillow app to resize profile pics 
-from flask import url_for
+from flask import url_for, current_app 
 from flask_mail import Message
-from flaskblog import app, mail  # imports from __init__.py since setup as a package in folder called 'flaskblog'
+from flaskblog import mail  # imports from __init__.py since setup as a package in folder called 'flaskblog'
+
 
 def save_picture(form_picture):  # Data from uploaded pic has a .filename attribute 
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)  # Concetenate the file name extension. 
     picture_fn = random_hex + f_ext  # picture filenamne
-    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)  # Where to save profile pics 
+    picture_path = os.path.join(current_app.root_path, 'static/profile_pics', picture_fn)  # Where to save profile pics 
 
     output_size = (125, 125)
     i = Image.open(form_picture)
