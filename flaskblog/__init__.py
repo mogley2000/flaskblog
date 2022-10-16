@@ -35,8 +35,10 @@ def create_app(config_class=Config):  #imported from config.py class. default = 
     from flaskblog.users.routes import users  
     from flaskblog.posts.routes import posts  
     from flaskblog.main.routes import main  
+    from flaskblog.errors.handlers import errors # import instance of the errors Blueprint 
     app.register_blueprint(users)
     app.register_blueprint(posts)
     app.register_blueprint(main)
+    app.register_blueprint(errors)
 
     return app
