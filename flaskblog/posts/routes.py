@@ -27,7 +27,7 @@ def post(post_id):  # Receives post_id from the variable received in the route a
     return render_template('post.html', title=post.title, post=post)
 
 
-@posts.route("/post/<int:post_id>/update", methods=['GET', 'POST'])  
+@posts.route("/post/<int:post_id>/update", methods=['GET', 'POST'])  # Update post 
 @login_required
 def update_post(post_id):
     post = Post.query.get_or_404(post_id) # Get the post related to post_id  

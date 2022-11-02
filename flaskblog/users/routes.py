@@ -50,7 +50,7 @@ def logout():
 
 
 @users.route("/account", methods=['GET', 'POST'])  # methods allows you to POST back to the route and recieve data from forms
-@login_required  # Extension requires us to login to access route. Define the login route in __init__.py 
+@login_required  # Extension requires us to login to access route. 
 def account():
     form = UpdateAccountForm()
 

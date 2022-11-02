@@ -1,3 +1,5 @@
+# __init__.py is loaded automatically and referred to as 'from flaskblog import create_app' e.g. refer to run.py 
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
