@@ -11,6 +11,7 @@ users = Blueprint('users', __name__)  # similar to users = Flask(__name__). Pass
 
 
 @users.route("/register", methods=['GET', 'POST'])  # Route needs to be able to POST to register 
+@login_required  # I HAVE RESTRICTED ACCESS FOR NEW REGISTRATIONS 
 def register():
     if current_user.is_authenticated: # If user already logged in, clicking register route redirects you to home instead of login since don't need to login again 
         return redirect(url_for('main.home'))
